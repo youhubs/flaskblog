@@ -1,3 +1,6 @@
+import os
+import secrets
+from PIL import Image  # pillow
 from flask import render_template, url_for, flash, redirect, request
 from blog import app, db, bcrypt
 from blog.models import User, Post
@@ -68,11 +71,28 @@ def logout():
     return redirect(url_for('home'))
 
 
+def save_picture(picture_file):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(picture_file.filename)
+    picture_name = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_name)
+   
+    output_size = 125, 125
+    img = Image.open(picture_file)
+    img.thumbnail(output_size)
+    img.save(picture_path)
+    
+    return picture_name
+
+
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
+        if form.picture.data:
+            picture_file = save_picture(form.picture.data)
+            current_user.image_file = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data
         db.session.commit()
