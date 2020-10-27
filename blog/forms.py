@@ -13,16 +13,14 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
-        if username.data != current_user.username:
-            user = User.query.filter_by(username=username.data).first()
-            if user:
-                raise ValidationError('That username exists! Please try again!')
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('That username exists! Please try again!')
 
-    def validate_email(self, email):
-        if email.data != current_user.email:
-            email = User.query.filter_by(email=email.data).first()
-            if email:
-                raise ValidationError('That email exists! Please try again!')
+    def validate_email(self, email):   
+        email = User.query.filter_by(email=email.data).first()
+        if email:
+            raise ValidationError('That email exists! Please try again!')
 
 
 class LoginForm(FlaskForm):
@@ -38,11 +36,13 @@ class UpdateAccountForm(FlaskForm):
     submit = SubmitField('Update')
 
     def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError('That username exists! Please try again!')
+        if username.data != current_user.username:
+            user = User.query.filter_by(username=username.data).first()
+            if user:
+                raise ValidationError('That username exists! Please try again!')
 
     def validate_email(self, email):
-        email = User.query.filter_by(email=email.data).first()
-        if email:
-            raise ValidationError('That email exists! Please try again!')
+        if email.data != current_user.email:
+            email = User.query.filter_by(email=email.data).first()
+            if email:
+                raise ValidationError('That email exists! Please try again!')
