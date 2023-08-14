@@ -1,4 +1,4 @@
-## My Blog
+### My Blog
 This is a simple blog site using Flask framework.
 The features include:
 - User registration, login, and logout
